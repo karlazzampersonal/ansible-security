@@ -1,0 +1,13 @@
+---
+- name: Security tasks like locking down ssh, enable auto updates, etc
+  hosts: all
+  vars_files:
+    - vars/vars.yml
+
+  tasks:
+    - name: Include tasks
+      include_tasks: tasks/main.yml
+
+  handlers:
+    - name: Import handlers
+      import_tasks: handlers/main.yml

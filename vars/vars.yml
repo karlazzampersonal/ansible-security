@@ -1,0 +1,17 @@
+---
+# ssh config
+security_ssh_port: 34168
+
+# fail2ban config
+# (disabled for now since fail2ban doesn't work on latest Ubuntu LTS)
+security_fail2ban_enabled: false
+
+# autoupdate config
+security_autoupdate_enabled: true
+security_autoupdate_blacklist: []
+
+# Autoupdate mail settings
+security_autoupdate_reboot: "false"
+security_autoupdate_reboot_time: "03:00"
+security_autoupdate_mail_to: "karlazzamhomelab@gmail.com"
+security_autoupdate_mail_on_error: true

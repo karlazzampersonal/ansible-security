@@ -1,0 +1,16 @@
+---
+- name: restart ssh
+  service:
+    name: ssh
+    state: restarted
+    daemon_reload: true
+
+- name: reload ufw
+  command: ufw reload
+  ufw:
+    state: reloaded
+
+- name: reload fail2ban
+  service:
+    name: fail2ban
+    state: reloaded

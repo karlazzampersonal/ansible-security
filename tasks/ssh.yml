@@ -1,0 +1,46 @@
+---
+- name: Update SSH configuration to be more secure excl port
+  lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    validate: 'sshd -T -f %s'
+    mode: 0644
+  with_items:
+    - regexp: "^PasswordAuthentication"
+      line: "PasswordAuthentication no"
+    - regexp: "^Port"
+      line: "Port {{ security_ssh_port }}"
+    - regexp: "^PermitRootLogin"
+      line: "PermitRootLogin no"
+    - regexp: "^UseDNS"
+      line: "UseDNS no"
+    - regexp: "^PermitEmptyPasswords"
+      line: "PermitEmptyPasswords no"
+    - regexp: "^ChallengeResponseAuthentication"
+      line: "ChallengeResponseAuthentication no"
+    - regexp: "^GSSAPIAuthentication"
+      line: "GSSAPIAuthentication no"
+    - regexp: "^X11Forwarding"
+      line: "X11Forwarding no"
+  notify: restart ssh
+
+- name: Update SSH port to be more secure.
+  lineinfile:
+    dest: "/lib/systemd/system/ssh.socket"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    mode: 0644
+  with_items:
+    - regexp: "^ListenStream"
+      line: "ListenStream={{ security_ssh_port }}"
+  notify: restart ssh
+
+- name: Allow SSH traffic on the new port
+  ufw:
+    rule: allow
+    port: "{{ security_ssh_port }}"
+    state: enabled
+  notify: reload ufw
